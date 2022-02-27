@@ -1,0 +1,39 @@
+﻿@page "/product/{tId}"
+@inject iProductService oProductService
+
+<div class="media">
+	<div class="media-img-big-wrapper">
+		<img class="media-img-big" src="@oProduct.tImg" alt="@oProduct.tTitle" />
+	</div>
+	<div class="media-body">
+		<h2 class="mb-0">@oProduct.tTitle</h2>
+		<p>@oProduct.tDescription</p>
+		@if (oProduct.cBasePrice != oProduct.cPrice)
+		{
+			<h6 class="text-muted original-price">฿@oProduct.cBasePrice</h6>
+		}
+		<h4 class="price">฿@oProduct.cPrice</h4>
+
+		<button class="btn btn-primary"><i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;&nbsp;Add to Cart</button>
+	</div>
+</div>
+
+@code {
+	private cmProduct oProduct = null;
+
+
+	[Parameter]
+	public string tId { get; set; }
+
+
+
+	protected override void OnInitialized()
+	{
+		if (oProductService.aoProducts == null || oProductService.aoProducts.Count == 0)
+		{
+			oProductService.LoadProducts();
+		}
+
+		oProduct = oProductService.aoProducts.FirstOrDefault(oP => oP.nId == Convert.ToInt32(tId));
+	}
+}
