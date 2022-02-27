@@ -1,4 +1,4 @@
-﻿@page "/product/{tId}"
+﻿@page "/product/{nId:int}"
 @inject iProductService oProductService
 
 <div class="media">
@@ -19,21 +19,16 @@
 </div>
 
 @code {
-	private cmProduct oProduct = null;
+	private cmProduct oProduct = new cmProduct();
 
 
 	[Parameter]
-	public string tId { get; set; }
+	public int nId { get; set; }
 
 
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
-		if (oProductService.aoProducts == null || oProductService.aoProducts.Count == 0)
-		{
-			oProductService.LoadProducts();
-		}
-
-		oProduct = oProductService.aoProducts.FirstOrDefault(oP => oP.nId == Convert.ToInt32(tId));
+		oProduct = await oProductService.LoadProducts(nId);
 	}
 }

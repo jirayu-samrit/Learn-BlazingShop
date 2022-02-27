@@ -1,17 +1,17 @@
 ﻿@page "/"
 @page "/{tCategoryUrl}"
 @inject iCategoryService oCategoryService
+@inject iProductService oProductService
 
-@if (oCategory!=null)
+@if (oCategory != null)
 {
 	<h1>Welcome to @oCategory.tName Section</h1>
-	<CP_ProductList nCategoryId="@oCategory.nID"/>
 }
 else
 {
 	<h1>Welcome to Blazing Shop!</h1>
-	<CP_ProductList />
 }
+<CP_ProductList />
 
 @code
 {
@@ -20,9 +20,11 @@ else
 
 	private cmCategory oCategory { get; set; } = null;
 
-	protected override void OnParametersSet()
+	protected override async Task OnParametersSetAsync()
 	{
-		if(String.IsNullOrEmpty(tCategoryUrl) == false)
+		await oProductService.LoadProducts(tCategoryUrl);
+
+		if (String.IsNullOrEmpty(tCategoryUrl) == false)
 		{
 			oCategory = oCategoryService.aoCategories.FirstOrDefault(c => c.tUrl.ToLower() == tCategoryUrl.ToLower());
 		}
